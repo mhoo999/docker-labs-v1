@@ -40,6 +40,8 @@ services:
       - my-net
     depends_on:
       - my-todo-express
+    environment:
+      NEXT_PUBLIC_API_URL: http://172.16.219.153:8080
 
 volumes:
   postgres-data:
