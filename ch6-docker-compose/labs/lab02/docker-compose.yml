@@ -26,7 +26,7 @@ services:
       context: "./frontend"     # 변경
       dockerfile: "Dockerfile"
     ports:
-      - "5173:5173"
+      - "3000:3000"
     networks:
       - my-net
     depends_on:

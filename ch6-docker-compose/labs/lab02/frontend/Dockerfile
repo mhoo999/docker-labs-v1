@@ -1,7 +1,8 @@
-FROM node:latest
+FROM node:18-alpine
 WORKDIR /app
-COPY package.json ./
+COPY package*.json ./
 RUN npm install
-COPY . /app
-EXPOSE 3000
-CMD [ "npm", "start" ]
+COPY . .
+RUN npm run build  # 빌드 추가
+EXPOSE 5173
+CMD ["npm", "start"]  # production 모드
