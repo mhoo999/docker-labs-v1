@@ -1,29 +1,38 @@
 version: "3.8"
 
 services:
-  my-mongo-db:
-    image: "mongo:latest"
+  my-postgres-db:
+    image: "postgres:15"
+    environment:
+      POSTGRES_DB: todoapp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
     ports:
-      - "27017:27017"
+      - "5432:5432"
     volumes:
-      - mongo-data:/data/db
+      - postgres-data:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d  # 초기화 스크립트 추가
     networks:
       - my-net
 
   my-todo-express:
     build:
-      context: "./backend"      # 변경
+      context: "./backend"
       dockerfile: "Dockerfile"
     ports:
       - "8080:8080"
     networks:
       - my-net
     depends_on:
-      - my-mongo-db
+      - my-postgres-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://my-postgres-db:5432/todoapp
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
 
   my-todo-react:
     build:
-      context: "./frontend"     # 변경
+      context: "./frontend"
       dockerfile: "Dockerfile"
     ports:
       - "3000:3000"
@@ -33,8 +42,7 @@ services:
       - my-todo-express
 
 volumes:
-  mongo-data:
-    external: true
+  postgres-data:
 
 networks:
   my-net:
