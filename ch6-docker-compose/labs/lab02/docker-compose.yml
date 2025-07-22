@@ -15,7 +15,7 @@ services:
       context: "./backend"      # 변경
       dockerfile: "Dockerfile"
     ports:
-      - "3001:3001"
+      - "8080:8080"
     networks:
       - my-net
     depends_on:
