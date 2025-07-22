@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  my-mongo-db:
+    image: "mongo:latest"
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - my-net
+
+  my-todo-express:
+    build:
+      context: "./my-todo-express"
+      dockerfile: "Dockerfile"
+    ports:
+      - "3001:3001"
+    networks:
+      - my-net
+    depends_on:
+      - my-mongo-db
+
+  my-todo-react:
+    build:
+      context: "./my-todo-react"
+      dockerfile: "Dockerfile"
+    ports:
+      - "5173:5173"
+    networks:
+      - my-net
+    depends_on:
+      - my-todo-express
+
+volumes:
+  mongo-data:
+    external: true
+
+networks:
+  my-net:
+    driver: bridge
